@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/rs/cors"
 )
 
 type server struct {
@@ -235,9 +237,11 @@ func main() {
 	if port == "" {
 		port = "8081"
 	}
+	handler := cors.Default().Handler(mux)
 	httpServer := &http.Server{
 		Addr:    fmt.Sprintf(":%s", port),
-		Handler: mux}
+		Handler: handler,
+	}
 
 	log.Printf("Starting server on port %s\n", port)
 	log.Fatal(httpServer.ListenAndServe())
