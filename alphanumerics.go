@@ -8,9 +8,9 @@ import (
 )
 
 type AlphanumericsRecord struct {
-	TestLoincCode string `json:"display"`
+	Value         string `json:"display"`
 	Code          string `json:"code"`
-	Value         string `json:"value"`
+	TestLoincCode string `json:"loinc_test"`
 	System        string `json:"system"`
 }
 

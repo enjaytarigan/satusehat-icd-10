@@ -111,8 +111,8 @@ func searchLoinc(records []LoincRecord, searchTerm string) []LoincRecord {
 	result := make([]LoincRecord, 0, len(records))
 
 	for _, record := range records {
-		if strings.Contains(record.Code, searchTerm) ||
-			strings.Contains(record.Display, searchTerm) {
+		if strings.Contains(strings.ToLower(record.Code), strings.ToLower(searchTerm)) ||
+			strings.Contains(strings.ToLower(record.Display), strings.ToLower(searchTerm)) {
 			result = append(result, record)
 		}
 	}
@@ -230,17 +230,26 @@ func main() {
 
 	mux.HandleFunc("/api/icd10", srv.handleGetICD10)
 	mux.HandleFunc("/api/loinc", srv.handleGetLoinc) // Add LOINC endpoint
-	mux.HandleFunc("/api/specimentype", srv.handleGetSpecimenType)
-	mux.HandleFunc("/api/alphanumerics", srv.handleGetAlphanumeric)
+	mux.HandleFunc("/api/specimen", srv.handleGetSpecimenType)
+	mux.HandleFunc("/api/alphanumeric", srv.handleGetAlphanumeric)
+
+	// Konfigurasi CORS
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},                                       // Mengizinkan semua domain
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}, // Metode HTTP yang diizinkan
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},           // Header yang diizinkan
+		AllowCredentials: true,                                                // Mengizinkan kredensial
+		Debug:            false,                                               // Nonaktifkan debug mode
+	}).Handler(mux)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}
-	handler := cors.Default().Handler(mux)
+
 	httpServer := &http.Server{
 		Addr:    fmt.Sprintf(":%s", port),
-		Handler: handler,
+		Handler: corsHandler,
 	}
 
 	log.Printf("Starting server on port %s\n", port)
