@@ -1,8 +1,8 @@
-# SATUSEHAT ICD-10 API
+# SATUSEHAT API
 
 ## What is it?
 
-This is a simple API server that provides a list of ICD-10 diagnosis codes and their descriptions in JSON format.
+This is a simple API server that provides a list of ..... codes and their descriptions in JSON format.
 
 ## How to use it?
 
@@ -23,3 +23,13 @@ To run the docker container, run `docker run -p 8080:8080 satusehat-icd10-api` i
 ### Pull from docker hub
 
 You can pull the docker image from docker hub by visiting this link: https://hub.docker.com/r/enjaytarigan/satusehat-icd10-api
+
+
+### for service compose yml
+services:
+    # ... other services
+    satusehat_master_api:
+        container_name: satusehat_master_api
+        build: /path/to/satusehat/folder
+        ports:
+            - "8080:8080"
